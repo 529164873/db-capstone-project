@@ -66,28 +66,55 @@ LOCK TABLES `customers` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `menu`
+-- Table structure for table `menuitems`
 --
 
-DROP TABLE IF EXISTS `menu`;
+DROP TABLE IF EXISTS `menuitems`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `menu` (
-  `MenuID` int NOT NULL,
-  `ItemName` varchar(45) DEFAULT NULL,
-  `ItemType` varchar(45) DEFAULT NULL,
-  `Cuisine` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`MenuID`)
+CREATE TABLE `menuitems` (
+  `MenuItemsID` int NOT NULL,
+  `CourseName` varchar(45) DEFAULT NULL,
+  `StarterName` varchar(45) DEFAULT NULL,
+  `DessertName` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`MenuItemsID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `menu`
+-- Dumping data for table `menuitems`
 --
 
-LOCK TABLES `menu` WRITE;
-/*!40000 ALTER TABLE `menu` DISABLE KEYS */;
-/*!40000 ALTER TABLE `menu` ENABLE KEYS */;
+LOCK TABLES `menuitems` WRITE;
+/*!40000 ALTER TABLE `menuitems` DISABLE KEYS */;
+/*!40000 ALTER TABLE `menuitems` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `menus`
+--
+
+DROP TABLE IF EXISTS `menus`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `menus` (
+  `MenuID` int NOT NULL,
+  `MenuItemsID` int DEFAULT NULL,
+  `MenuName` varchar(45) DEFAULT NULL,
+  `Cuisine` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`MenuID`),
+  KEY `MenuItemsID_idx` (`MenuItemsID`),
+  CONSTRAINT `MenuItemsID` FOREIGN KEY (`MenuItemsID`) REFERENCES `menuitems` (`MenuItemsID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `menus`
+--
+
+LOCK TABLES `menus` WRITE;
+/*!40000 ALTER TABLE `menus` DISABLE KEYS */;
+/*!40000 ALTER TABLE `menus` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -139,7 +166,7 @@ CREATE TABLE `orders` (
   KEY `StatusID_idx` (`StatusID`),
   CONSTRAINT `BookingID` FOREIGN KEY (`TableNo`) REFERENCES `bookings` (`BookingID`),
   CONSTRAINT `CustomerID` FOREIGN KEY (`CustomerID`) REFERENCES `customers` (`CustomerID`),
-  CONSTRAINT `MenuID` FOREIGN KEY (`MenuID`) REFERENCES `menu` (`MenuID`),
+  CONSTRAINT `MenuID` FOREIGN KEY (`MenuID`) REFERENCES `menus` (`MenuID`),
   CONSTRAINT `StaffID` FOREIGN KEY (`StaffID`) REFERENCES `staff information` (`StaffID`),
   CONSTRAINT `StatusID` FOREIGN KEY (`StatusID`) REFERENCES `order delivery status` (`StatusID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
@@ -153,6 +180,20 @@ LOCK TABLES `orders` WRITE;
 /*!40000 ALTER TABLE `orders` DISABLE KEYS */;
 /*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Temporary view structure for view `ordersview`
+--
+
+DROP TABLE IF EXISTS `ordersview`;
+/*!50001 DROP VIEW IF EXISTS `ordersview`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `ordersview` AS SELECT 
+ 1 AS `OrderID`,
+ 1 AS `Quantity`,
+ 1 AS `TotalCost`*/;
+SET character_set_client = @saved_cs_client;
 
 --
 -- Table structure for table `staff information`
@@ -181,6 +222,24 @@ LOCK TABLES `staff information` WRITE;
 /*!40000 ALTER TABLE `staff information` DISABLE KEYS */;
 /*!40000 ALTER TABLE `staff information` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Final view structure for view `ordersview`
+--
+
+/*!50001 DROP VIEW IF EXISTS `ordersview`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`CML`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `ordersview` AS select `orders`.`OrderID` AS `OrderID`,`orders`.`Quantity` AS `Quantity`,`orders`.`TotalCost` AS `TotalCost` from `orders` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -191,4 +250,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-08-02 15:23:51
+-- Dump completed on 2024-08-06 15:24:11
