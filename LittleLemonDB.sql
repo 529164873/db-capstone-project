@@ -23,11 +23,12 @@ DROP TABLE IF EXISTS `bookings`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `bookings` (
-  `BookingID` int NOT NULL,
-  `BookingDate` datetime DEFAULT NULL,
+  `BookingID` int NOT NULL AUTO_INCREMENT,
+  `BookingDate` date DEFAULT NULL,
   `TableNo` int DEFAULT NULL,
+  `BookedCustomerID` int DEFAULT NULL,
   PRIMARY KEY (`BookingID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -36,6 +37,7 @@ CREATE TABLE `bookings` (
 
 LOCK TABLES `bookings` WRITE;
 /*!40000 ALTER TABLE `bookings` DISABLE KEYS */;
+INSERT INTO `bookings` VALUES (1,'2022-10-10',5,1),(2,'2022-11-12',3,3),(3,'2022-10-11',2,2),(4,'2022-10-13',2,1),(5,'2022-11-12',2,2),(6,'2022-11-12',6,4),(7,'2022-11-12',1,4);
 /*!40000 ALTER TABLE `bookings` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -152,6 +154,7 @@ CREATE TABLE `orders` (
   `OrderID` int NOT NULL,
   `OrderDate` datetime DEFAULT NULL,
   `CustomerID` int DEFAULT NULL,
+  `BookingID` int DEFAULT NULL,
   `StatusID` int DEFAULT NULL,
   `MenuID` int DEFAULT NULL,
   `Quantity` int DEFAULT NULL,
@@ -162,9 +165,9 @@ CREATE TABLE `orders` (
   KEY `MenuID_idx` (`MenuID`),
   KEY `StaffID_idx` (`StaffID`),
   KEY `CustomerID_idx` (`CustomerID`),
-  KEY `BookingID_idx` (`TableNo`),
   KEY `StatusID_idx` (`StatusID`),
-  CONSTRAINT `BookingID` FOREIGN KEY (`TableNo`) REFERENCES `bookings` (`BookingID`),
+  KEY `BookingID_idx` (`BookingID`),
+  CONSTRAINT `BookingID` FOREIGN KEY (`BookingID`) REFERENCES `bookings` (`BookingID`),
   CONSTRAINT `CustomerID` FOREIGN KEY (`CustomerID`) REFERENCES `customers` (`CustomerID`),
   CONSTRAINT `MenuID` FOREIGN KEY (`MenuID`) REFERENCES `menus` (`MenuID`),
   CONSTRAINT `StaffID` FOREIGN KEY (`StaffID`) REFERENCES `staff information` (`StaffID`),
@@ -250,4 +253,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-08-06 15:24:11
+-- Dump completed on 2024-08-07 11:46:51
